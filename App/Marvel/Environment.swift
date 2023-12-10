@@ -26,4 +26,11 @@ class Environment: APIEnvironment {
         domainURL: URL(string: "https://gateway.marvel.com/v1/public/"),
         type: .production
     )
+
+    static var local = Environment(
+        apipublicKey: "",
+        apiprivateKey: "",
+        domainURL: URL(string: ""),
+        type: .local
+    )
 }

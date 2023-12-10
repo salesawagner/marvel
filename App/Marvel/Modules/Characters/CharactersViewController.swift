@@ -7,12 +7,11 @@
 
 import UIKit
 
-final class CharactersViewController: UIViewController {
+final class CharactersViewController: MarvelTableViewController {
     // MARK: Properties
 
-    let viewModel: CharactersViewModel
-    let activityIndicator = UIActivityIndicatorView()
-    let tableView = UITableView(frame: .zero, style: .grouped)
+    var viewModel: CharactersInputProtocol
+
     let searchBar = UISearchBar()
     var collapsed = Set<Int>()
     var errorView: UIView?
@@ -35,47 +34,37 @@ final class CharactersViewController: UIViewController {
         return viewController
     }
 
+    // MARK: Lifecycle
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupUI()
         viewModel.viewDidLoad()
+    }
+
+    override func setupUI() {
+        super.setupUI()
+        setupSearchBar()
+    }
+    
+    override func setupTableView() {
+        super.setupTableView()
+        tableView.dataSource = self
+        tableView.delegate = self
     }
 
     // MARK: Setups
 
-    private func setupUI() {
-        view.backgroundColor = .white
-        setupActivityIndicator()
-        setupSearchBar()
-        setupTableView()
-    }
-
-    private func setupActivityIndicator() {
-        activityIndicator.style = .medium
-        activityIndicator.center = view.center
-        activityIndicator.hidesWhenStopped = true
-        activityIndicator.color = .darkText
-        activityIndicator.startAnimating()
-        view.addSubview(activityIndicator)
-    }
-
     private func setupSearchBar() {
         searchBar.delegate = self
         searchBar.placeholder = "Pesquisar..."
+        searchBar.backgroundColor = .black
         navigationItem.titleView = searchBar
         navigationItem.rightBarButtonItem = nil
-    }
 
-    private func setupTableView() {
-        tableView.alpha = 0
-        tableView.dataSource = self
-        tableView.delegate = self
-        tableView.rowHeight = UITableView.automaticDimension
-        tableView.sectionFooterHeight = 8
-        tableView.showsVerticalScrollIndicator = false
-        tableView.showsHorizontalScrollIndicator = false
-        tableView.register(CharacterRow.self, forCellReuseIdentifier: CharacterRow.identifier)
-        tableView.fill(on: view)
+        // Modify search bar text color
+        if let textFieldInsideSearchBar = searchBar.value(forKey: "searchField") as? UITextField {
+            textFieldInsideSearchBar.textColor = .white
+        }
     }
 
     @objc
@@ -169,9 +158,9 @@ extension CharactersViewController: UITableViewDelegate {
     }
 }
 
-// MARK: - ViewModel Response
+// MARK: - CharactersOutnputProtocol
 
-extension CharactersViewController {
+extension CharactersViewController: CharactersOutputProtocol {
     func startLoading() {
         activityIndicator.startAnimating()
         UIView.animate(withDuration: 0.25) { [weak self] in

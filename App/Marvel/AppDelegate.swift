@@ -21,7 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
-        window?.backgroundColor = .white
+        window?.backgroundColor = .black
 
 
         // Navigation bar appearance

@@ -7,11 +7,9 @@
 
 import UIKit
 
-class DetailViewController: UIViewController {
+class DetailViewController: MarvelTableViewController {
 
     let viewModel: DetailViewModel
-    let activityIndicator = UIActivityIndicatorView()
-    let tableView = UITableView(frame: .zero, style: .grouped)
     var errorView: UIView?
 
     private init(viewModel: DetailViewModel) {
@@ -36,33 +34,11 @@ class DetailViewController: UIViewController {
         viewModel.viewDidLoad()
     }
 
-    // MARK: Setups
-
-    private func setupUI() {
-        view.backgroundColor = .white
-        setupActivityIndicator()
-        setupTableView()
-    }
-
-    private func setupActivityIndicator() {
-        activityIndicator.style = .medium
-        activityIndicator.center = view.center
-        activityIndicator.hidesWhenStopped = true
-        activityIndicator.color = .darkText
-        activityIndicator.startAnimating()
-        view.addSubview(activityIndicator)
-    }
-
-    private func setupTableView() {
+    override func setupTableView() {
+        super.setupTableView()
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.rowHeight = UITableView.automaticDimension
-        tableView.sectionFooterHeight = 0
-        tableView.tableFooterView = UIView()
-        tableView.showsVerticalScrollIndicator = false
-        tableView.showsHorizontalScrollIndicator = false
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
-        tableView.fill(on: view)
     }
 }
 
@@ -105,7 +81,11 @@ extension DetailViewController: UITableViewDelegate {
 
 // MARK: - ViewModel Response
 
-extension DetailViewController {
+extension DetailViewController: DetailOutputProtocol {
+    func setTitle(_ title: String) {
+        navigationItem.title = title
+    }
+
     func startLoading() {
         activityIndicator.startAnimating()
         UIView.animate(withDuration: 0.25) { [weak self] in

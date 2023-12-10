@@ -15,7 +15,7 @@ class DetailViewModel {
     private let resourceURI: String?
 
     let name: String?
-    var viewController: DetailViewController?
+    var viewController: DetailOutputProtocol?
     var sections: [DetailSectionViewModel] = []
 
     // MARK: Inits
@@ -25,8 +25,15 @@ class DetailViewModel {
         self.name = name
         self.resourceURI = resourceURI
     }
+}
 
-    // MARK: Private Methods
+// MARK: - DetailsInputProtocol
+
+extension DetailViewModel: DetailInputProtocol {
+    func viewDidLoad() {
+        viewController?.setTitle(name ?? "")
+        requestComic()
+    }
 
     func requestComic() {
         guard let resourceURI = resourceURI else {
@@ -45,11 +52,5 @@ class DetailViewModel {
                 self?.viewController?.failure()
             }
         }
-    }
-
-    // MARK: Internal Methods
-
-    func viewDidLoad() {
-        requestComic()
     }
 }
