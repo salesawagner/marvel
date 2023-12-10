@@ -86,16 +86,9 @@ public class WASAPI: APIClient {
 
     private func dataTask(urlRequest: URLRequest, completion: @escaping ResultCallback<(Data?, URLResponse?)>) {
         let task = session.dataTask(with: urlRequest) { (data, response, error) in
-            guard let httpResponse = response as? HTTPURLResponse else {
-                APILogger.mark("invalidResponse")
-                completion(.failure(APIError.invalidResponse))
-
-                return
-            }
-
             if let error = error {
-                APILogger.mark("unknown: \(error) \(httpResponse.statusCode)")
-                completion(.failure(.unknown(error: error, statusCode: httpResponse.statusCode)))
+                APILogger.mark("unknown: \(error)")
+                completion(.failure(.invalidResponse))
             } else {
                 completion(.success((data, response)))
             }
@@ -146,23 +139,16 @@ public class WASAPI: APIClient {
 
         APILogger.log(.init(message: endpoint.absoluteString, attributes: request.attributes))
         let urlRequest = prepareRequest(request, endpoint: endpoint)
-        let task = session.dataTask(with: urlRequest) { [weak self] (data, response, error) in
+        dataTask(urlRequest: urlRequest) { [weak self] result in
             DispatchQueue.main.async {
-                guard let httpResponse = response as? HTTPURLResponse else {
-                    APILogger.mark("invalidResponse")
-                    completion(.failure(APIError.invalidResponse))
-                    return
-                }
-                
-                if let error = error {
-                    APILogger.mark("unknown: \(error) \(httpResponse.statusCode)")
-                    completion(.failure(.unknown(error: error, statusCode: httpResponse.statusCode)))
-                } else {
+                switch result {
+                case .success(let (data, response)):
                     self?.parse(request, data: data, response: response, completion: completion)
+
+                case .failure(let error):
+                    completion(.failure(error))
                 }
             }
         }
-
-        task.resume()
     }
 }

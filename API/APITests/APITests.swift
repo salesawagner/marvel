@@ -22,7 +22,7 @@ final class APITests: XCTestCase {
 
         let expectation = XCTestExpectation(description: "testNotConfigured")
         let api = WASAPI(environment: Environment.production)
-        api.send(GetCharacters()) { result in
+        api.send(GetCharactersRequest()) { result in
             switch result {
             case .success(let response):
                 print(response)
@@ -69,10 +69,17 @@ class Environment: APIEnvironment {
         domainURL: URL(string: "https://gateway.marvel.com:443/v1/public/"),
         type: .production
     )
+
+    static var local = Environment(
+        apipublicKey: "",
+        apiprivateKey: "",
+        domainURL: URL(string: ""),
+        type: .local
+    )
 }
 
-struct GetCharacters: APIRequest {
-    typealias Response = [ComicCharacter]
+struct GetCharactersRequest: APIRequest {
+    typealias Response = [GetComicRequest]
 
     var httpMethod: APIHTTPMethod {
         .get
@@ -96,7 +103,7 @@ struct GetCharacters: APIRequest {
     }
 }
 
-struct ComicCharacter: Decodable {
+struct GetComicRequest: Decodable {
     let id: Int
     let name: String?
     let description: String?
