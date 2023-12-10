@@ -5,7 +5,7 @@ Projeto para avaliação. Lista todos os personagens da marvel com busca por nom
 Xcode 15.0 </br>
 Swift 5.0 </br>
 XcodeGen ([https://github.com/yonaskolb/XcodeGen](https://github.com/yonaskolb/XcodeGen))</br>
-Cocoapods ([https://cocoapods.org](https://cocoapods.org))
+Cocoapods ([https://cocoapods.org](https://cocoapods.org))</br>
 Swiftlint ([https://github.com/realm/SwiftLint](https://github.com/realm/SwiftLint))
 
 # Start
