@@ -9,10 +9,14 @@ import Foundation
 
 extension Bundle {
     func getUrlFile(named fileName: String) -> URL? {
-        guard let path = path(forResource: fileName, ofType: "json") else {
-            return nil
+        if let path = path(forResource: fileName, ofType: "json") { // From API SDK
+            return URL(fileURLWithPath: path)
+        } else if let bundleURL = url(forResource: "API", withExtension: "bundle"), // From app
+            let bundle = Bundle(url: bundleURL),
+            let path = bundle.path(forResource: fileName, ofType: "json") {
+            return URL(fileURLWithPath: path)
         }
 
-        return URL(fileURLWithPath: path)
+        return nil
     }
 }

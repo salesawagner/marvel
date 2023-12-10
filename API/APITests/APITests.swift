@@ -21,7 +21,7 @@ final class APITests: XCTestCase {
     func testExample() throws {
 
         let expectation = XCTestExpectation(description: "testNotConfigured")
-        let api = WASAPI(environment: Environment.production)
+        let api = WASAPI(environment: Environment.local)
         api.send(GetCharactersRequest()) { result in
             switch result {
             case .success(let response):

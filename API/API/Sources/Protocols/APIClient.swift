@@ -8,6 +8,6 @@
 import Foundation
 
 public typealias ResultCallback<Value> = (Result<Value, APIError>) -> Void
-protocol APIClient {
+public protocol APIClient {
     func send<T: APIRequest>(_ request: T, completion: @escaping ResultCallback<T.Response>)
 }
