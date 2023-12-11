@@ -83,11 +83,12 @@ public class WASAPI: APIClient {
 
     private func dataTask(urlRequest: URLRequest, completion: @escaping ResultCallback<(Data?, URLResponse?)>) {
         let task = session.dataTask(with: urlRequest) { (data, response, error) in
-            if let error = error {
+            guard error == nil else {
                 completion(.failure(.invalidResponse))
-            } else {
-                completion(.success((data, response)))
+                return
             }
+            
+            completion(.success((data, response)))
         }
 
         task.resume()

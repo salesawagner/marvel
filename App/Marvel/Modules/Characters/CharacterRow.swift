@@ -36,7 +36,7 @@ class CharacterRow: UITableViewCell {
 
     // MARK: Internal Methods
 
-    func setup(viewModel: CharacterRowViewModel) {
+    func setup(with viewModel: CharacterRowViewModel) {
         nameLabel.text = viewModel.name
     }
 }

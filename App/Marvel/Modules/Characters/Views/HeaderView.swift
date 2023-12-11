@@ -7,18 +7,18 @@
 
 import UIKit
 
-final class HeaderView: UIView {
+final class HeaderView: UITableViewHeaderFooterView {
+    static var identifier = String(describing: HeaderView.self)
+
     // MARK: Properties
 
-    private let viewModel: CharacterSectionViewModel
     private let nameLabel = UILabel()
     private let thumbnail = UIImageView()
 
     // MARK: Constructors
 
-    init(viewModel: CharacterSectionViewModel) {
-        self.viewModel = viewModel
-        super.init(frame: .zero)
+    override init(reuseIdentifier: String?) {
+        super.init(reuseIdentifier: reuseIdentifier)
         setupUI()
     }
     
@@ -29,29 +29,21 @@ final class HeaderView: UIView {
 
     // MARK: Setups
 
-    func setupUI() {
+    private func setupUI() {
         backgroundColor = .gray
-        setupNameLabel()
         setupThumbnail()
         setupStackView()
     }
 
-    func setupNameLabel() {
-        let nameLabel = UILabel()
-        nameLabel.text = viewModel.name
-    }
-
-    func setupThumbnail() {
-        let thumbnail = UIImageView()
+    private func setupThumbnail() {
         thumbnail.backgroundColor = .lightGray
-        thumbnail.loadFromUrl(url: viewModel.thumbnailURL)
         NSLayoutConstraint.activate([
             thumbnail.widthAnchor.constraint(equalToConstant: 100),
             thumbnail.heightAnchor.constraint(equalToConstant: 100)
         ])
     }
 
-    func setupStackView() {
+    private func setupStackView() {
         let stackView = UIStackView()
         stackView.axis = .horizontal
         stackView.alignment = .top
@@ -60,5 +52,10 @@ final class HeaderView: UIView {
         stackView.addArrangedSubview(thumbnail)
         stackView.addArrangedSubview(nameLabel)
         stackView.fill(on: self, constant: 8)
+    }
+
+    func setup(with viewModel: CharacterSectionViewModel) {
+        nameLabel.text = viewModel.name
+        thumbnail.loadFromUrl(url: viewModel.thumbnailURL)
     }
 }

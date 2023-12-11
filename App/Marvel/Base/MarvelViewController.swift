@@ -44,7 +44,6 @@ class MarvelTableViewController: UIViewController {
         tableView.sectionFooterHeight = 8
         tableView.showsVerticalScrollIndicator = false
         tableView.showsHorizontalScrollIndicator = false
-        tableView.register(CharacterRow.self, forCellReuseIdentifier: CharacterRow.identifier)
         tableView.fill(on: view)
     }
 }

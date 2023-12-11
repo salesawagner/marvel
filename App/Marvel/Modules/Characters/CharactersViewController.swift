@@ -53,6 +53,8 @@ final class CharactersViewController: MarvelTableViewController {
         tableView.dataSource = self
         tableView.delegate = self
         tableView.addSubview(refreshControl)
+        tableView.register(HeaderView.self, forHeaderFooterViewReuseIdentifier: HeaderView.identifier)
+        tableView.register(CharacterRow.self, forCellReuseIdentifier: CharacterRow.identifier)
     }
 
     // MARK: Setups
@@ -80,17 +82,16 @@ final class CharactersViewController: MarvelTableViewController {
     }
 
     @objc
-    private func tapSection(sender: UIButton) {
-        defer {
-            tableView.reloadSections([sender.tag], with: .fade)
+    private func tapSection(_ gesture: UITapGestureRecognizer) {
+        guard let view = gesture.view else { return }
+
+        if collapsed.contains(view.tag) {
+            collapsed.remove(view.tag)
+        } else {
+            collapsed.insert(view.tag)
         }
 
-        guard !collapsed.contains(sender.tag) else {
-            collapsed.remove(sender.tag)
-            return
-        }
-
-        collapsed.insert(sender.tag)
+        tableView.reloadSections([view.tag], with: .fade)
     }
 }
 
@@ -121,7 +122,7 @@ extension CharactersViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let section = viewModel.sections[indexPath.section]
         let cell = tableView.dequeueReusableCell(withIdentifier: CharacterRow.identifier) as? CharacterRow
-        cell?.setup(viewModel: section.rows[indexPath.row])
+        cell?.setup(with: section.rows[indexPath.row])
         cell?.backgroundColor = (indexPath.row % 2 == 0) ? .lightGray : .gray
 
         return cell ?? UITableViewCell()
@@ -132,35 +133,14 @@ extension CharactersViewController: UITableViewDataSource {
 
 extension CharactersViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let viewModel = viewModel.sections[section]
-        let nameLabel = UILabel()
-        nameLabel.text = viewModel.name
+        let identifier = HeaderView.identifier
+        guard let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: identifier) as? HeaderView else {
+            return nil
+        }
 
-        let thumbnail = UIImageView()
-        thumbnail.loadFromUrl(url: viewModel.thumbnailURL)
-        NSLayoutConstraint.activate([
-            thumbnail.widthAnchor.constraint(equalToConstant: 100),
-            thumbnail.heightAnchor.constraint(equalToConstant: 100)
-        ])
-
-        let stackView = UIStackView()
-        stackView.axis = .horizontal
-        stackView.alignment = .top
-        stackView.spacing = 8
-
-        stackView.addArrangedSubview(thumbnail)
-        stackView.addArrangedSubview(nameLabel)
-
-        let view = UIView(frame: .zero)
-        view.backgroundColor = .darkGray
-        stackView.fill(on: view, constant: 8)
-
-        let button = UIButton(type: .custom)
-        button.frame = view.bounds
-        button.tag = section
-        button.addTarget(self, action: #selector(tapSection(sender:)), for: .touchUpInside)
-        
-        button.fill(on: view)
+        view.setup(with: viewModel.sections[section])
+        view.tag = section
+        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapSection(_:))))
 
         return view
     }
