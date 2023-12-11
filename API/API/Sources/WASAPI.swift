@@ -58,7 +58,7 @@ public class WASAPI: APIClient {
 
             components.queryItems = customQueryItems
             return components.url
-        
+
         default:
             return components.url
         }
@@ -131,7 +131,7 @@ public class WASAPI: APIClient {
 
     // MARK: Internal Properties
 
-    public func send<T>(_ request: T, completion: @escaping ResultCallback<T.Response>) where T : APIRequest {
+    public func send<T>(_ request: T, completion: @escaping ResultCallback<T.Response>) where T: APIRequest {
         guard let endpoint = endpoint(for: request) else {
             completion(.failure(APIError.badUrl))
             return

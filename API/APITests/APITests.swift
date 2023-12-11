@@ -9,17 +9,7 @@ import XCTest
 import API
 
 final class APITests: XCTestCase {
-
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-
     func testExample() throws {
-
         let expectation = XCTestExpectation(description: "testNotConfigured")
         let api = WASAPI(environment: Environment.local)
         api.send(GetCharactersRequest()) { result in
@@ -32,43 +22,25 @@ final class APITests: XCTestCase {
                 XCTFail()
 
             }
-
             expectation.fulfill()
         }
 
-
         wait(for: [expectation], timeout: 3)
     }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
-    }
-
 }
 
-// FIXME: remove
 class Environment: APIEnvironment {
     var apipublicKey: String
     var apiprivateKey: String
     var domainURL: URL?
     var type: API.APIEnvironmentType
-    
+
     init(apipublicKey: String, apiprivateKey: String, domainURL: URL? = nil, type: API.APIEnvironmentType) {
         self.apipublicKey = apipublicKey
         self.apiprivateKey = apiprivateKey
         self.domainURL = domainURL
         self.type = type
     }
-
-    static var production = Environment(
-        apipublicKey: "9d031e3b858d70cb0f76a5efce634e61",
-        apiprivateKey: "5e96c9810158f55b11a323b658a972312995d4a8",
-        domainURL: URL(string: "https://gateway.marvel.com:443/v1/public/"),
-        type: .production
-    )
 
     static var local = Environment(
         apipublicKey: "",
@@ -95,7 +67,7 @@ struct GetCharactersRequest: APIRequest {
     let limit: Int?
     let offset: Int?
 
-    init(name: String? = nil, nameStartsWith: String? = nil,  limit: Int? = nil, offset: Int? = nil) {
+    init(name: String? = nil, nameStartsWith: String? = nil, limit: Int? = nil, offset: Int? = nil) {
         self.name = name
         self.nameStartsWith = nameStartsWith
         self.limit = limit
