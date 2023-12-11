@@ -33,7 +33,6 @@ public class WASAPI: APIClient {
             let domainURL = environment.domainURL,
             let endpoint = URL(string: request.resourceName, relativeTo: domainURL),
             var components = URLComponents(url: endpoint, resolvingAgainstBaseURL: true) else {
-            APILogger.mark("Bad resourceName: \(request.resourceName)")
             return nil
         }
 
@@ -52,7 +51,6 @@ public class WASAPI: APIClient {
                 let queryItems = try URLQueryItemEncoder.encode(request)
                 customQueryItems.append(contentsOf: queryItems)
             } catch {
-                APILogger.mark("Wrong parameters: \(error)")
                 return nil
             }
 
@@ -73,13 +71,12 @@ public class WASAPI: APIClient {
                 let parameters = try JSONEncoder().encode(request)
                 urlRequest.httpBody = parameters
             } catch let error {
-                APILogger.mark(error.localizedDescription)
+                print(error.localizedDescription)
             }
         }
 
         urlRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
         urlRequest.addValue("application/json", forHTTPHeaderField: "Accept")
-        urlRequest.logger(.verbose)
 
         return urlRequest
     }
@@ -87,7 +84,6 @@ public class WASAPI: APIClient {
     private func dataTask(urlRequest: URLRequest, completion: @escaping ResultCallback<(Data?, URLResponse?)>) {
         let task = session.dataTask(with: urlRequest) { (data, response, error) in
             if let error = error {
-                APILogger.mark("unknown: \(error)")
                 completion(.failure(.invalidResponse))
             } else {
                 completion(.success((data, response)))
@@ -103,10 +99,6 @@ public class WASAPI: APIClient {
         response: URLResponse?,
         completion: @escaping ResultCallback<R.Response>
     ) {
-        if let httpResponse = response as? HTTPURLResponse {
-            httpResponse.logger(data: data, level: .verbose)
-        }
-
         guard let data = data else {
             completion(.failure(APIError.invalidResponse))
             return
@@ -137,7 +129,6 @@ public class WASAPI: APIClient {
             return
         }
 
-        APILogger.log(.init(message: endpoint.absoluteString, attributes: request.attributes))
         let urlRequest = prepareRequest(request, endpoint: endpoint)
         dataTask(urlRequest: urlRequest) { [weak self] result in
             DispatchQueue.main.async {
