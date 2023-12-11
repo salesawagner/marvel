@@ -23,12 +23,12 @@ final class DetailViewViewControllerSpy: DetailOutputProtocol {
     func startLoading() {
         receivedMessages.append(.startLoading)
     }
-    
+
     func success() {
         receivedMessages.append(.success)
         expectation?.fulfill()
     }
-    
+
     func failure() {
         receivedMessages.append(.failure)
         expectation?.fulfill()

@@ -21,7 +21,7 @@ final class HeaderView: UITableViewHeaderFooterView {
         super.init(reuseIdentifier: reuseIdentifier)
         setupUI()
     }
-    
+
     @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -48,7 +48,7 @@ final class HeaderView: UITableViewHeaderFooterView {
         stackView.axis = .horizontal
         stackView.alignment = .top
         stackView.spacing = 8
-        
+
         stackView.addArrangedSubview(thumbnail)
         stackView.addArrangedSubview(nameLabel)
         stackView.fill(on: self, constant: 8)

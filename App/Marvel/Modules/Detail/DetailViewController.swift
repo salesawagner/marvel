@@ -11,10 +11,9 @@ final class DetailViewController: MarvelTableViewController {
     // MARK: - Properties
 
     var viewModel: DetailInputProtocol
-    
+
     let refreshControl: UIRefreshControl = UIRefreshControl()
     var errorView: UIView?
-
 
     // MARK: Constructors
 

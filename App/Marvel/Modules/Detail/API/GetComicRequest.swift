@@ -20,4 +20,3 @@ struct GetComicRequest: APIRequest {
         self.resourceName = resourceName
     }
 }
-

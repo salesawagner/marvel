@@ -23,12 +23,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.makeKeyAndVisible()
         window?.backgroundColor = .black
 
-
         // Navigation bar appearance
         let navAppearance = UINavigationBar.appearance()
         navAppearance.barTintColor = .white
         navAppearance.isTranslucent = false
-
 
         return true
     }

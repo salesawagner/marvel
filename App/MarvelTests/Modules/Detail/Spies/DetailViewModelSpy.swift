@@ -16,7 +16,7 @@ final class DetailViewModelSpy: DetailInputProtocol {
     func viewDidLoad() {
         receivedMessages.append(.viewDidLoad)
     }
-    
+
     func requestComic() {
         receivedMessages.append(.requestComic)
     }

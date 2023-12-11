@@ -29,7 +29,7 @@ final class DetailViewControllerTests: XCTestCase {
 
         XCTAssertEqual(viewModelSpy.receivedMessages, [.viewDidLoad])
     }
-    
+
     func test_requestComic_shouldReceiveCorrectMessages() {
         let (sut, viewModelSpy) = makeSUT()
         loadView(sut: sut)

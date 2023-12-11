@@ -47,7 +47,7 @@ final class CharactersViewController: MarvelTableViewController {
         setupSearchBar()
         setupRefreshControl()
     }
-    
+
     override func setupTableView() {
         super.setupTableView()
         tableView.dataSource = self
@@ -118,7 +118,7 @@ extension CharactersViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         collapsed.contains(section) ? viewModel.sections[section].rows.count : 0
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let section = viewModel.sections[indexPath.section]
         let cell = tableView.dequeueReusableCell(withIdentifier: CharacterRow.identifier) as? CharacterRow
