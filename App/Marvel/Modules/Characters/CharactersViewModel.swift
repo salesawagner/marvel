@@ -15,6 +15,7 @@ class CharactersViewModel {
 
     var viewController: CharactersOutputProtocol?
     var sections: [CharacterSectionViewModel] = []
+    var collapsed = Set<Int>()
 
     // MARK: Inits
 
@@ -45,7 +46,17 @@ extension CharactersViewModel: CharactersInputProtocol {
         }
     }
 
-    func didSelecteRow(indexPath: IndexPath) {
+    func didSelectSection(section: Int) {
+        if collapsed.contains(section) {
+            collapsed.remove(section)
+        } else {
+            collapsed.insert(section)
+        }
+
+        viewController?.update(section: section)
+    }
+
+    func didSelectRow(indexPath: IndexPath) {
         let character = response[indexPath.section]
         let comic = character.comics.items[indexPath.row]
 

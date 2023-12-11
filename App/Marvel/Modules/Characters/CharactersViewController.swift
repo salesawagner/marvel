@@ -14,7 +14,6 @@ final class CharactersViewController: MarvelTableViewController {
 
     let searchBar = UISearchBar()
     let refreshControl: UIRefreshControl = UIRefreshControl()
-    var collapsed = Set<Int>()
     var errorView: UIView?
 
     // MARK: Constructors
@@ -82,16 +81,9 @@ final class CharactersViewController: MarvelTableViewController {
     }
 
     @objc
-    private func tapSection(_ gesture: UITapGestureRecognizer) {
+    func didSelectSection(_ gesture: UITapGestureRecognizer) {
         guard let view = gesture.view else { return }
-
-        if collapsed.contains(view.tag) {
-            collapsed.remove(view.tag)
-        } else {
-            collapsed.insert(view.tag)
-        }
-
-        tableView.reloadSections([view.tag], with: .fade)
+        viewModel.didSelectSection(section: view.tag)
     }
 }
 
@@ -116,7 +108,7 @@ extension CharactersViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        collapsed.contains(section) ? viewModel.sections[section].rows.count : 0
+        viewModel.collapsed.contains(section) ? viewModel.sections[section].rows.count : 0
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -140,13 +132,13 @@ extension CharactersViewController: UITableViewDelegate {
 
         view.setup(with: viewModel.sections[section])
         view.tag = section
-        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapSection(_:))))
+        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didSelectSection(_:))))
 
         return view
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        viewModel.didSelecteRow(indexPath: indexPath)
+        viewModel.didSelectRow(indexPath: indexPath)
     }
 }
 
@@ -185,5 +177,9 @@ extension CharactersViewController: CharactersOutputProtocol {
             self?.errorView?.alpha = 1
             self?.tableView.alpha = 0
         }
+    }
+
+    func update(section: Int) {
+        tableView.reloadSections([section], with: .fade)
     }
 }

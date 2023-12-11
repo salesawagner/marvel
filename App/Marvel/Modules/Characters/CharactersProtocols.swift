@@ -10,13 +10,16 @@ import Foundation
 protocol CharactersInputProtocol {
     var viewController: CharactersOutputProtocol? { get set }
     var sections: [CharacterSectionViewModel] { get }
+    var collapsed: Set<Int> { get }
     func viewDidLoad()
     func requestCharacters(nameStartsWith: String?)
-    func didSelecteRow(indexPath: IndexPath)
+    func didSelectSection(section: Int)
+    func didSelectRow(indexPath: IndexPath)
 }
 
 protocol CharactersOutputProtocol {
     func startLoading()
     func success()
     func failure()
+    func update(section: Int)
 }

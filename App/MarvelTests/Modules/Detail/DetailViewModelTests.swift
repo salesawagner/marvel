@@ -21,6 +21,20 @@ final class DetailViewModelTests: XCTestCase {
         return (sut, viewControllerSpy)
     }
 
+    func test_viewDidLoad_success_shouldReceiveCorrectMessages() {
+        let expectation = XCTestExpectation(description: "viewDidLoad_success")
+        let (sut, viewControllerSpy) = makeSUT(api: WASAPI(environment: Environment.local), expectation: expectation)
+        sut.viewDidLoad()
+
+        let result = XCTWaiter.wait(for: [expectation], timeout: 1)
+        switch result {
+        case .completed:
+            XCTAssertEqual(viewControllerSpy.receivedMessages, [.setTitle, .startLoading, .success])
+        default:
+            XCTFail("Delegate not called within timeout")
+        }
+    }
+
     func test_requestComic_startLoading_shouldReceiveCorrectMessages() {
         let (sut, viewControllerSpy) = makeSUT(api: WASAPI(environment: Environment.local))
         sut.requestComic()

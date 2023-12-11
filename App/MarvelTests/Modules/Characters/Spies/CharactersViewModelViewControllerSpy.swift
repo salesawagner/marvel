@@ -29,6 +29,10 @@ final class CharactersViewViewControllerSpy: CharactersOutputProtocol {
         receivedMessages.append(.failure)
         expectation?.fulfill()
     }
+
+    func update(section: Int) {
+        receivedMessages.append(.updateSection)
+    }
 }
 
 extension CharactersViewViewControllerSpy {
@@ -36,5 +40,6 @@ extension CharactersViewViewControllerSpy {
         case startLoading
         case success
         case failure
+        case updateSection
     }
 }
