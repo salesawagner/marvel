@@ -10,17 +10,17 @@ import API
 class DetailViewModel {
     // MARK: Properties
 
-    private var api: WASAPI
+    private var api: APIClient
     private var response: [GetComicResponse] = []
     private let resourceURI: String?
 
-    let name: String?
+    let name: String
     var viewController: DetailOutputProtocol?
     var sections: [DetailSectionViewModel] = []
 
     // MARK: Inits
 
-    init(api: WASAPI = WASAPI(environment: Environment.production), name: String?, resourceURI: String?) {
+    init(api: APIClient = WASAPI(environment: Environment.production), name: String, resourceURI: String) {
         self.api = api
         self.name = name
         self.resourceURI = resourceURI
@@ -31,7 +31,7 @@ class DetailViewModel {
 
 extension DetailViewModel: DetailInputProtocol {
     func viewDidLoad() {
-        viewController?.setTitle(name ?? "")
+        viewController?.setTitle(name)
         requestComic()
     }
 

@@ -8,20 +8,20 @@
 import API
 
 struct ComicResponse: Decodable {
-    let available: Int?
-    let collectionURI: String?
+    let available: Int
+    let collectionURI: String
     let items: [ComicItems]
 }
 
 struct ComicItems: Decodable {
-    let resourceURI: String?
-    let name: String?
+    let resourceURI: String
+    let name: String
 }
 
 struct ComicCharacterResponse: Decodable {
     let id: Int
-    let name: String?
-    let description: String?
+    let name: String
+    let description: String
     let thumbnail: Image?
     let comics: ComicResponse
 }

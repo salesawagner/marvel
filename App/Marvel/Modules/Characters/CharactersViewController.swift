@@ -13,12 +13,13 @@ final class CharactersViewController: MarvelTableViewController {
     var viewModel: CharactersInputProtocol
 
     let searchBar = UISearchBar()
+    let refreshControl: UIRefreshControl = UIRefreshControl()
     var collapsed = Set<Int>()
     var errorView: UIView?
 
     // MARK: Constructors
 
-    private init(viewModel: CharactersViewModel = .init()) {
+    private init(viewModel: CharactersInputProtocol) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -28,7 +29,7 @@ final class CharactersViewController: MarvelTableViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    static func create(with viewModel: CharactersViewModel) -> CharactersViewController {
+    static func create(with viewModel: CharactersInputProtocol = CharactersViewModel()) -> CharactersViewController {
         let viewController = CharactersViewController(viewModel: viewModel)
         viewController.viewModel.viewController = viewController
         return viewController
@@ -44,15 +45,21 @@ final class CharactersViewController: MarvelTableViewController {
     override func setupUI() {
         super.setupUI()
         setupSearchBar()
+        setupRefreshControl()
     }
     
     override func setupTableView() {
         super.setupTableView()
         tableView.dataSource = self
         tableView.delegate = self
+        tableView.addSubview(refreshControl)
     }
 
     // MARK: Setups
+
+    private func setupRefreshControl() {
+        refreshControl.addTarget(self, action: #selector(didRefresh(_:)), for: .valueChanged)
+    }
 
     private func setupSearchBar() {
         searchBar.delegate = self
@@ -65,6 +72,11 @@ final class CharactersViewController: MarvelTableViewController {
         if let textFieldInsideSearchBar = searchBar.value(forKey: "searchField") as? UITextField {
             textFieldInsideSearchBar.textColor = .white
         }
+    }
+
+    @objc
+    func didRefresh(_ refreshControl: UIRefreshControl) {
+        viewModel.requestCharacters(nameStartsWith: searchBar.text)
     }
 
     @objc
@@ -86,7 +98,7 @@ final class CharactersViewController: MarvelTableViewController {
 
 extension CharactersViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        viewModel.requestCharacters(name: searchBar.text)
+        viewModel.requestCharacters(nameStartsWith: searchBar.text)
     }
 
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {

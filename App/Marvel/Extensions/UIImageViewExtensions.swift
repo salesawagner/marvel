@@ -8,19 +8,13 @@
 import UIKit
 
 extension UIImageView {
-    func setNoImage() {
-
-    }
-
     func loadFromUrl(url: URL?) {
         guard let url = url else {
-            setNoImage()
             return
         }
 
         let task = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
            guard let data = data, error == nil else {
-               self?.setNoImage()
                return
            }
 

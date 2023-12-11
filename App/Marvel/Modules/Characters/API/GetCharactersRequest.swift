@@ -19,15 +19,9 @@ struct GetCharactersRequest: APIRequest {
     }
 
     // Parameters
-    let name: String?
     let nameStartsWith: String?
-    let limit: Int?
-    let offset: Int?
 
-    init(name: String? = nil, nameStartsWith: String? = nil,  limit: Int? = nil, offset: Int? = nil) {
-        self.name = name
+    init(nameStartsWith: String? = nil) {
         self.nameStartsWith = nameStartsWith
-        self.limit = limit
-        self.offset = offset
     }
 }

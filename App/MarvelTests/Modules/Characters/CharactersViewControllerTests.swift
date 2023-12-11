@@ -23,7 +23,7 @@ final class CharactersViewControllerTests: XCTestCase {
 
     // MARK: Tests
 
-    func test_viewIsRedy_shouldReceiveCorrectMessages() {
+    func test_viewDidLoad_shouldReceiveCorrectMessages() {
         let (sut, viewModelSpy) = makeSUT()
         loadView(sut: sut)
 

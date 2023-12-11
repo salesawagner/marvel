@@ -11,7 +11,7 @@ protocol CharactersInputProtocol {
     var viewController: CharactersOutputProtocol? { get set }
     var sections: [CharacterSectionViewModel] { get }
     func viewDidLoad()
-    func requestCharacters(name: String?)
+    func requestCharacters(nameStartsWith: String?)
     func didSelecteRow(indexPath: IndexPath)
 }
 

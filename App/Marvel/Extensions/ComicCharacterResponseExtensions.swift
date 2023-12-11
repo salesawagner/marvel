@@ -10,7 +10,7 @@ import Foundation
 extension Array where Element == ComicCharacterResponse {
     var sectionViewModel: [CharacterSectionViewModel] {
         map {
-            .init(name: $0.name ?? "", thumbnailURL: $0.thumbnail?.url, rows: $0.comics.rowViewModel)
+            .init(name: $0.name, thumbnailURL: $0.thumbnail?.url, rows: $0.comics.rowViewModel)
         }
     }
 }

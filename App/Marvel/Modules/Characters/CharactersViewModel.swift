@@ -10,7 +10,7 @@ import API
 class CharactersViewModel {
     // MARK: Properties
 
-    private var api: WASAPI
+    private var api: APIClient
     private var response: [ComicCharacterResponse] = []
 
     var viewController: CharactersOutputProtocol?
@@ -18,7 +18,7 @@ class CharactersViewModel {
 
     // MARK: Inits
 
-    init(api: WASAPI = WASAPI(environment: Environment.production)) {
+    init(api: APIClient = WASAPI(environment: Environment.production)) {
         self.api = api
     }
 }
@@ -30,9 +30,9 @@ extension CharactersViewModel: CharactersInputProtocol {
         requestCharacters()
     }
 
-    func requestCharacters(name: String? = nil) {
+    func requestCharacters(nameStartsWith: String? = nil) {
         viewController?.startLoading()
-        api.send(GetCharactersRequest(nameStartsWith: name)) { [weak self] result in
+        api.send(GetCharactersRequest(nameStartsWith: nameStartsWith)) { [weak self] result in
             switch result {
             case .success(let response):
                 self?.response = response
@@ -50,7 +50,7 @@ extension CharactersViewModel: CharactersInputProtocol {
         let comic = character.comics.items[indexPath.row]
 
         (viewController as? UIViewController)?.navigationController?.pushViewController(
-            DetailViewController.create(with: .init(name: comic.name, resourceURI: comic.resourceURI)),
+            DetailViewController.create(with: DetailViewModel(name: comic.name, resourceURI: comic.resourceURI)),
             animated: true
         )
     }

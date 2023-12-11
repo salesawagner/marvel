@@ -7,12 +7,18 @@
 
 import UIKit
 
-class DetailViewController: MarvelTableViewController {
+final class DetailViewController: MarvelTableViewController {
+    // MARK: - Properties
 
-    let viewModel: DetailViewModel
+    var viewModel: DetailInputProtocol
+    
+    let refreshControl: UIRefreshControl = UIRefreshControl()
     var errorView: UIView?
 
-    private init(viewModel: DetailViewModel) {
+
+    // MARK: Constructors
+
+    private init(viewModel: DetailInputProtocol) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -22,11 +28,13 @@ class DetailViewController: MarvelTableViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    static func create(with viewModel: DetailViewModel) -> DetailViewController {
+    static func create(with viewModel: DetailInputProtocol) -> DetailViewController {
         let viewController = DetailViewController(viewModel: viewModel)
         viewController.viewModel.viewController = viewController
         return viewController
     }
+
+    // MARK: Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,11 +42,30 @@ class DetailViewController: MarvelTableViewController {
         viewModel.viewDidLoad()
     }
 
+    override func setupUI() {
+        super.setupUI()
+        setupRefreshControl()
+    }
+
     override func setupTableView() {
         super.setupTableView()
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
+        tableView.addSubview(refreshControl)
+    }
+
+    // MARK: Setups
+
+    private func setupRefreshControl() {
+        refreshControl.addTarget(self, action: #selector(didRefresh(_:)), for: .valueChanged)
+    }
+
+    // MARK: Actions
+
+    @objc
+    func didRefresh(_ refreshControl: UIRefreshControl) {
+        viewModel.requestComic()
     }
 }
 
@@ -64,6 +91,8 @@ extension DetailViewController: UITableViewDataSource {
     }
 }
 
+// MARK: - UITableViewDelegate
+
 extension DetailViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let viewModel = viewModel.sections[section]
@@ -79,7 +108,7 @@ extension DetailViewController: UITableViewDelegate {
     }
 }
 
-// MARK: - ViewModel Response
+// MARK: - DetailOutputProtocol
 
 extension DetailViewController: DetailOutputProtocol {
     func setTitle(_ title: String) {
@@ -96,6 +125,7 @@ extension DetailViewController: DetailOutputProtocol {
 
     func success() {
         tableView.reloadData()
+        refreshControl.endRefreshing()
         activityIndicator.stopAnimating()
         UIView.animate(withDuration: 0.25) { [weak self] in
             self?.tableView.alpha = 1
@@ -106,6 +136,8 @@ extension DetailViewController: DetailOutputProtocol {
     }
 
     func failure() {
+        tableView.reloadData()
+        refreshControl.endRefreshing()
         activityIndicator.stopAnimating()
         guard errorView == nil else { return }
 

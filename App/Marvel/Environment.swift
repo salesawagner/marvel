@@ -20,7 +20,7 @@ class Environment: APIEnvironment {
         self.type = type
     }
 
-    static var production = Environment(
+    static var production = Environment( // Obfuscation would be necessary
         apipublicKey: "9d031e3b858d70cb0f76a5efce634e61",
         apiprivateKey: "5e96c9810158f55b11a323b658a972312995d4a8",
         domainURL: URL(string: "https://gateway.marvel.com/v1/public/"),

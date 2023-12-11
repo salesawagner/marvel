@@ -16,7 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         window = UIWindow()
 
-        let viewController = CharactersViewController.create(with: .init())
+        let viewController = CharactersViewController.create()
         let navigationController = UINavigationController(rootViewController: viewController)
 
         window?.rootViewController = navigationController

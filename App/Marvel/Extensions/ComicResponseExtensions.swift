@@ -9,6 +9,6 @@ import Foundation
 
 extension ComicResponse {
     var rowViewModel: [CharacterRowViewModel] {
-        items.map { .init(name: $0.name ?? "", resourceURI: $0.resourceURI ?? "") }
+        items.map { .init(name: $0.name, resourceURI: $0.resourceURI) }
     }
 }
